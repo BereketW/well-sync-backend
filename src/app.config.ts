@@ -1,8 +1,16 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export function configureApp(app: INestApplication): void {
+  app.use('/docs', (req: Request, res: Response, next: NextFunction): void => {
+    if (req.originalUrl === '/docs') {
+      res.redirect(301, '/docs/');
+      return;
+    }
+    next();
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Well-Sync Backend API')
     .setDescription('Well-Sync backend API documentation')
