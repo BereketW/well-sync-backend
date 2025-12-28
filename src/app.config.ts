@@ -1,6 +1,5 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import express, { type Request, type Response } from 'express';
 
 export function configureApp(app: INestApplication): void {
   const config = new DocumentBuilder()
@@ -24,5 +23,4 @@ export function configureApp(app: INestApplication): void {
       persistAuthorization: true,
     },
   });
-  app.use('/docs-json', (_req: Request, res: Response) => res.json(document));
 }

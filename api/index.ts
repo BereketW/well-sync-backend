@@ -1,12 +1,14 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
-import type { Express, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/app.config';
 
-let cachedExpressApp: Express | null = null;
+type ExpressHandler = (req: Request, res: Response) => void;
 
-async function bootstrapExpressApp(): Promise<Express> {
+let cachedExpressApp: ExpressHandler | null = null;
+
+async function bootstrapExpressApp(): Promise<ExpressHandler> {
   if (cachedExpressApp) {
     return cachedExpressApp;
   }
@@ -16,7 +18,9 @@ async function bootstrapExpressApp(): Promise<Express> {
   });
   configureApp(nestApp);
   await nestApp.init();
-  const expressInstance = nestApp.getHttpAdapter().getInstance() as Express;
+  const expressInstance = nestApp
+    .getHttpAdapter()
+    .getInstance() as unknown as ExpressHandler;
   cachedExpressApp = expressInstance;
   return cachedExpressApp;
 }
