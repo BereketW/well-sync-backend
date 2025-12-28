@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import type { Express, Request, Response } from 'express';
 import { AppModule } from '../src/app.module';
+import { configureApp } from '../src/app.config';
 
 let cachedExpressApp: Express | null = null;
 
@@ -13,6 +14,7 @@ async function bootstrapExpressApp(): Promise<Express> {
   const nestApp = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log'],
   });
+  configureApp(nestApp);
   await nestApp.init();
   const expressInstance = nestApp.getHttpAdapter().getInstance() as Express;
   cachedExpressApp = expressInstance;
