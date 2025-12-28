@@ -12,6 +12,12 @@ import type { JwtClaims } from './jwt.types';
 
 export interface AuthenticatedRequest extends Request {
   user?: JwtClaims;
+  /**
+   * Explicitly redeclare properties accessed in guards to satisfy the compiler
+   * when the base Request type is augmented per framework build settings.
+   */
+  headers: Request['headers'];
+  path: string;
 }
 
 @Injectable()
