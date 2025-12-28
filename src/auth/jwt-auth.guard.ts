@@ -9,16 +9,17 @@ import type { Request } from 'express';
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { verifyJwtHs256 } from './jwt.utils';
 import type { JwtClaims } from './jwt.types';
+import type { IncomingHttpHeaders } from 'http';
 
-export interface AuthenticatedRequest extends Request {
+export type AuthenticatedRequest = Request & {
   user?: JwtClaims;
   /**
    * Explicitly redeclare properties accessed in guards to satisfy the compiler
    * when the base Request type is augmented per framework build settings.
    */
-  headers: Request['headers'];
+  headers: IncomingHttpHeaders;
   path: string;
-}
+};
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
